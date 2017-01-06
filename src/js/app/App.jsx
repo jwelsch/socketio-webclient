@@ -30,7 +30,7 @@ export default class App extends Component {
 
          waitConnect.then( () => {
             const strObj = args.data;
-            const obj = eval( "(" + strObj + ")" );
+            const obj = strObj ? eval( "(" + strObj + ")" ) : undefined;
             const waitRequest = socket.request( args.event, obj );
 
             waitRequest.then( response => {
