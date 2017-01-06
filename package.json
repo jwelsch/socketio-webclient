@@ -1,0 +1,35 @@
+{
+  "name": "socket-client",
+  "main": "index.js",
+  "version": "1.0.1",
+  "description": "socket-client application",
+  "license": "MIT",
+  "author": "Justin Welsch (j.welsch@gmail.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/madhatter160/socket-client"
+  },
+  "private": true,
+  "dependencies": {
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "react": "^15.4.1",
+    "react-bootstrap": "^0.30.7",
+    "react-dom": "^15.4.1",
+    "socket.io-client": "^1.7.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-async-functions": "^6.8.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.26.1",
+    "file-loader": "^0.9.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.14.0"
+  },
+  "scripts": {
+    "build": "\"\"C:\\Program Files\\Git\\bin\\bash\" build/build.sh\""
+  }
+}

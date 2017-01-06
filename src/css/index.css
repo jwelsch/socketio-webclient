@@ -1,0 +1,11 @@
+body {
+   margin: 1em;
+}
+
+.defaultCursor {
+   cursor: auto
+}
+
+.waitCursor {
+   cursor: wait
+}
