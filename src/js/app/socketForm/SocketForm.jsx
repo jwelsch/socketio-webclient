@@ -94,7 +94,7 @@ export default class SocketForm extends Component {
                   <FormControl
                      type="text"
                      value={this.state.event}
-                     placeholder="Enter event"
+                     placeholder="Enter event (optional)"
                      disabled={this.props.sending}
                      onChange={this.handleChangeEvent.bind( this )}
                   />
@@ -109,7 +109,7 @@ export default class SocketForm extends Component {
                   <FormControl
                      componentClass="textarea"
                      value={this.state.data}
-                     placeholder="Enter data"
+                     placeholder="Enter data (optional)"
                      disabled={this.props.sending}
                      onChange={this.handleChangeData.bind( this )}
                   />
