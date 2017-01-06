@@ -35,6 +35,7 @@ export default class App extends Component {
 
             waitRequest.then( response => {
                // Successfully received response.
+               console.log( "Successfully received response." );
                this.setCursor( false );
                this.setState( {
                   response: Util.objectToString( response ),
@@ -43,21 +44,21 @@ export default class App extends Component {
             } )
             .catch ( error => {
                this.setErrorState( {
-                  header: `Error Sending Request`,
+                  header: "Error Sending Request",
                   message: Util.objectToString( error )
                } );
             } );
          } )
          .catch ( error => {
             this.setErrorState( {
-               header: `Error Connecting`,
+               header: "Error Connecting",
                message: Util.objectToString( error )
             } );
          } );
       }
       catch ( ex ) {
          this.setErrorState( {
-            header: `Error`,
+            header: "Error",
             message: Util.objectToString( ex )
          } );
       }
@@ -85,7 +86,7 @@ export default class App extends Component {
    render() {
       return (
          <div>
-            <h1>Socket.io Client</h1>
+            <h1>Socket.io Web Client</h1>
             <SocketForm onSend={this.handleSend.bind( this )} sending={this.state.sending} />
             <Col sm={7}>
                <hr/>

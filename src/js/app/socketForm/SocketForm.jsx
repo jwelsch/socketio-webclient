@@ -11,14 +11,15 @@ export default class SocketForm extends Component {
          url: "",
          event: "",
          data: "",
-         enableSend: false
+         enableSend: () => {
+            return this.state.url.length > 0 && !this.props.sending;
+         }
       };
    }
 
    handleChangeUrl( e ) {
       this.setState( {
-         url: e.target.value,
-         enableSend: e.target.value.length > 0 && this.state.event.length > 0
+         url: e.target.value
       } );
    }
 
@@ -33,18 +34,8 @@ export default class SocketForm extends Component {
 
    handleChangeEvent( e ) {
       this.setState( {
-         event: e.target.value,
-         enableSend: this.state.url.length > 0 && e.target.value.length > 0
+         event: e.target.value
       } );
-   }
-
-   getValidationStateEvent() {
-      const length = this.state.event.length;
-      if ( length === 0 ) {
-         return "error";
-      }
-
-      return "success";
    }
 
    handleChangeData( e ) {
@@ -55,7 +46,7 @@ export default class SocketForm extends Component {
 
    handleClickSend( e ) {
       if ( !this.props.onSend ) {
-         const message = `Error: this.props.onSend is undefined or null.`;
+         const message = "Error: this.props.onSend is undefined or null.";
          throw new Error( message );
       }
 
@@ -96,7 +87,6 @@ export default class SocketForm extends Component {
             </FormGroup>
             <FormGroup
                controlId="formEvent"
-               validationState={this.getValidationStateEvent()}
                bsSize="sm"
             >
                <Col componentClass={ControlLabel} sm={2}>Event</Col>
@@ -130,7 +120,7 @@ export default class SocketForm extends Component {
                bsSize="sm"
             >
                <Col smOffset={2} sm={2}>
-                  <Button disabled={!this.state.enableSend || this.props.sending} onClick={this.handleClickSend.bind( this )}>Send</Button>
+                  <Button disabled={!this.state.enableSend()} onClick={this.handleClickSend.bind( this )}>Send</Button>
                </Col>
                <div style={{marginTop: 2 + "px"}}>
                   {this.props.sending ?
