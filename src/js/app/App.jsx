@@ -14,6 +14,8 @@ export default class App extends Component {
          sending: false,
          error: null
       };
+
+      this.socket = new SocketManager();
    }
 
    handleSend( args ) {
@@ -23,18 +25,17 @@ export default class App extends Component {
          error: null
       } );
 
-      const socket = new SocketManager();
-
       try {
-         const waitConnect = socket.connect( args.url );
+         const waitConnect = this.socket.connect( args.url );
 
          waitConnect.then( () => {
             const strObj = args.data;
             const obj = strObj ? eval( "(" + strObj + ")" ) : undefined;
-            const waitRequest = socket.request( args.event, obj );
+            const waitRequest = this.socket.request( args.event, obj );
 
             waitRequest.then( response => {
                // Successfully received response.
+               this.socket.disconnect();
                console.log( "Successfully received response." );
                this.setCursor( false );
                this.setState( {
@@ -64,7 +65,15 @@ export default class App extends Component {
       }
    }
 
+   handleCancel() {
+      this.setErrorState( {
+         header: "Cancelled",
+         message: "User cancelled send."
+      } );
+   }
+
    setErrorState( error ) {
+      this.socket.disconnect();
       this.setCursor( false );
       this.setState( {
          sending: false,
@@ -87,7 +96,7 @@ export default class App extends Component {
       return (
          <div>
             <h1>Socket.io Web Client</h1>
-            <SocketForm onSend={this.handleSend.bind( this )} sending={this.state.sending} />
+            <SocketForm onSend={this.handleSend.bind( this )} onCancel={this.handleCancel.bind( this )} sending={this.state.sending} />
             <Col sm={7}>
                <hr/>
             </Col>

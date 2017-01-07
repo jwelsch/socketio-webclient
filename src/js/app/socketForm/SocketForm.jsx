@@ -11,10 +11,14 @@ export default class SocketForm extends Component {
          url: "",
          event: "",
          data: "",
-         enableSend: () => {
-            return this.state.url.length > 0 && !this.props.sending;
-         }
+         actionButtonText: ""
       };
+   }
+
+   updateActionButtonText( props ) {
+      this.setState( {
+         actionButtonText: props.sending ? "Cancel" : "Send"
+      } );
    }
 
    handleChangeUrl( e ) {
@@ -44,7 +48,16 @@ export default class SocketForm extends Component {
       } );
    }
 
-   handleClickSend( e ) {
+   handleClickAction( e ) {
+      if ( this.props.sending ) {
+         this.handleCancel();
+      }
+      else {
+         this.handleSend();
+      }
+   }
+
+   handleSend() {
       if ( !this.props.onSend ) {
          const message = "Error: this.props.onSend is undefined or null.";
          throw new Error( message );
@@ -66,6 +79,23 @@ export default class SocketForm extends Component {
       } );
    }
 
+   handleCancel() {
+      if ( !this.props.onCancel ) {
+         const message = "Error: this.props.onCancel is undefined or null.";
+         throw new Error( message );
+      }
+
+      this.props.onCancel();
+   }
+
+   componentWillMount() {
+      this.updateActionButtonText( this.props );
+   }
+
+   componentWillReceiveProps( nextProps ) {
+      this.updateActionButtonText( nextProps );
+   }
+
    render() {
       return (
          <Form horizontal>
@@ -80,7 +110,7 @@ export default class SocketForm extends Component {
                      type="text"
                      value={this.state.url}
                      placeholder="Enter URL"
-                     disabled={this.props.sending}
+                     readOnly={this.props.sending}
                      onChange={this.handleChangeUrl.bind( this )}
                   />
                </Col>
@@ -95,7 +125,7 @@ export default class SocketForm extends Component {
                      type="text"
                      value={this.state.event}
                      placeholder="Enter event (optional)"
-                     disabled={this.props.sending}
+                     readOnly={this.props.sending}
                      onChange={this.handleChangeEvent.bind( this )}
                   />
                </Col>
@@ -110,7 +140,7 @@ export default class SocketForm extends Component {
                      componentClass="textarea"
                      value={this.state.data}
                      placeholder="Enter data (optional)"
-                     disabled={this.props.sending}
+                     readOnly={this.props.sending}
                      onChange={this.handleChangeData.bind( this )}
                   />
                </Col>
@@ -120,7 +150,7 @@ export default class SocketForm extends Component {
                bsSize="sm"
             >
                <Col smOffset={2} sm={2}>
-                  <Button disabled={!this.state.enableSend()} onClick={this.handleClickSend.bind( this )}>Send</Button>
+                  <Button onClick={this.handleClickAction.bind( this )}>{this.state.actionButtonText}</Button>
                </Col>
                <div style={{marginTop: 2 + "px"}}>
                   {this.props.sending ?
@@ -137,5 +167,6 @@ export default class SocketForm extends Component {
 
 SocketForm.propTypes = {
    onSend: React.PropTypes.func.isRequired,
+   onCancel: React.PropTypes.func.isRequired,
    sending: React.PropTypes.bool
 };
