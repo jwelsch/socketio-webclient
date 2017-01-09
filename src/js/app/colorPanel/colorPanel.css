@@ -50,3 +50,7 @@
 .color-panel-short {
    margin-bottom: 10px;
 }
+
+.color-panel-flush {
+   margin-bottom: 0;
+}

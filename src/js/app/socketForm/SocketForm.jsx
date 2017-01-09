@@ -10,15 +10,24 @@ export default class SocketForm extends Component {
       this.state = {
          url: "",
          event: "",
-         data: "",
-         actionButtonText: ""
+         data: ""
       };
    }
 
-   updateActionButtonText( props ) {
-      this.setState( {
-         actionButtonText: props.sending ? "Cancel" : "Send"
-      } );
+   isIdle( props ) {
+      return ( props ? props.status : this.props.status ) === "idle";
+   }
+
+   isSending( props ) {
+      return ( props ? props.status : this.props.status ) === "sending";
+   }
+
+   isError( props ) {
+      return ( props ? props.status : this.props.status ) === "error";
+   }
+
+   showMessagePanel() {
+      return this.isError() || this.isSending();
    }
 
    handleChangeUrl( e ) {
@@ -49,7 +58,7 @@ export default class SocketForm extends Component {
    }
 
    handleClickAction( e ) {
-      if ( this.props.sending ) {
+      if ( this.isSending() ) {
          this.handleCancel();
       }
       else {
@@ -88,12 +97,28 @@ export default class SocketForm extends Component {
       this.props.onCancel();
    }
 
-   componentWillMount() {
-      this.updateActionButtonText( this.props );
-   }
+   renderMessagePanel( columns ) {
+      if ( !this.showMessagePanel() ) {
+         return "";
+      }
 
-   componentWillReceiveProps( nextProps ) {
-      this.updateActionButtonText( nextProps );
+      let bsStyle = "";
+      let message = "";
+
+      if ( this.isError() ) {
+         bsStyle = "danger";
+         message = this.props.error.message;
+      }
+      else {
+         bsStyle = "info";
+         message = "Sending request...";
+      }
+
+      return (
+         <Col sm={columns}>
+            <ColorPanel bsStyle={bsStyle} bsSize="md" flush>{message}</ColorPanel>
+         </Col>
+      );
    }
 
    render() {
@@ -110,7 +135,7 @@ export default class SocketForm extends Component {
                      type="text"
                      value={this.state.url}
                      placeholder="Enter URL"
-                     readOnly={this.props.sending}
+                     readOnly={this.isSending()}
                      onChange={this.handleChangeUrl.bind( this )}
                   />
                </Col>
@@ -125,7 +150,7 @@ export default class SocketForm extends Component {
                      type="text"
                      value={this.state.event}
                      placeholder="Enter event (optional)"
-                     readOnly={this.props.sending}
+                     readOnly={this.isSending()}
                      onChange={this.handleChangeEvent.bind( this )}
                   />
                </Col>
@@ -140,7 +165,7 @@ export default class SocketForm extends Component {
                      componentClass="textarea"
                      value={this.state.data}
                      placeholder="Enter data (optional)"
-                     readOnly={this.props.sending}
+                     readOnly={this.isSending()}
                      onChange={this.handleChangeData.bind( this )}
                   />
                </Col>
@@ -150,15 +175,9 @@ export default class SocketForm extends Component {
                bsSize="sm"
             >
                <Col smOffset={2} sm={2}>
-                  <Button onClick={this.handleClickAction.bind( this )}>{this.state.actionButtonText}</Button>
+                  <Button onClick={this.handleClickAction.bind( this )} disabled={this.getValidationStateUrl() === "error"}>{this.isSending() ? "Cancel" : "Send"}</Button>
                </Col>
-               <div style={{marginTop: 2 + "px"}}>
-                  {this.props.sending ?
-                     <Col sm={3}>
-                        <ColorPanel bsStyle="info" bsSize="sm" short>Sending request...</ColorPanel>
-                     </Col>
-                     : ""}
-               </div>
+               {this.renderMessagePanel( 8 )}
             </FormGroup>
          </Form>
       );
@@ -168,5 +187,6 @@ export default class SocketForm extends Component {
 SocketForm.propTypes = {
    onSend: React.PropTypes.func.isRequired,
    onCancel: React.PropTypes.func.isRequired,
-   sending: React.PropTypes.bool
+   status: React.PropTypes.string.isRequired,
+   error: React.PropTypes.object
 };

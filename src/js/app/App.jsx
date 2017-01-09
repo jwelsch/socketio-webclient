@@ -11,7 +11,7 @@ export default class App extends Component {
       super( props );
       this.state = {
          response: "",
-         sending: false,
+         status: "idle",
          error: null
       };
 
@@ -21,7 +21,8 @@ export default class App extends Component {
    handleSend( args ) {
       this.setCursor( true );
       this.setState( {
-         sending: true,
+         response: "",
+         status: "sending",
          error: null
       } );
 
@@ -40,7 +41,7 @@ export default class App extends Component {
                this.setCursor( false );
                this.setState( {
                   response: Util.objectToString( response ),
-                  sending: false
+                  status: "idle"
                } );
             } )
             .catch ( error => {
@@ -76,7 +77,7 @@ export default class App extends Component {
       this.socket.disconnect();
       this.setCursor( false );
       this.setState( {
-         sending: false,
+         status: "error",
          error: error
       } );
       console.error( error.header + ": " + error.message );
@@ -96,11 +97,11 @@ export default class App extends Component {
       return (
          <div>
             <h1>Socket.io Web Client</h1>
-            <SocketForm onSend={this.handleSend.bind( this )} onCancel={this.handleCancel.bind( this )} sending={this.state.sending} />
+            <SocketForm onSend={this.handleSend.bind( this )} onCancel={this.handleCancel.bind( this )} status={this.state.status} error={this.state.error} />
             <Col sm={7}>
                <hr/>
             </Col>
-            <SocketResponse response={this.state.response} error={this.state.error} />
+            <SocketResponse response={this.state.response} status={this.state.status} />
          </div>
       );
    }

@@ -8,27 +8,21 @@ export default class SocketResponse extends Component {
       this.state = {};
    }
 
-   renderError() {
-      if ( !this.props.error ) {
-         return null;
+   render() {
+      let placeholder = "";
+
+      if ( this.props.status === "error" ) {
+         placeholder = "An error has occurred"
+      }
+      else if ( this.props.status === "sending" ) {
+         placeholder = "Waiting for response"
+      }
+      else {
+         placeholder = "Response"
       }
 
       return (
-         <FormGroup
-            controlId="formError"
-            bsSize="sm"
-         >
-            <Col smOffset={2} sm={10}>
-               <Panel header={this.props.error.header} bsStyle="danger">{this.props.error.message}</Panel>
-            </Col>
-         </FormGroup>
-      );
-   }
-
-   render() {
-      return (
          <Form horizontal>
-            {this.renderError()}
             <FormGroup
                controlId="formResponse"
                bsSize="sm"
@@ -38,7 +32,7 @@ export default class SocketResponse extends Component {
                   <FormControl
                      componentClass="textarea"
                      value={this.props.response}
-                     placeholder={this.props.error ? "An error has occurred" : "Response"}
+                     placeholder={placeholder}
                      readOnly
                   />
                </Col>
@@ -50,5 +44,5 @@ export default class SocketResponse extends Component {
 
 SocketResponse.propTypes = {
    response: React.PropTypes.string,
-   error: React.PropTypes.object
+   status: React.PropTypes.string.isRequired
 };
