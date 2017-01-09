@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import { Form, FormGroup, Col, ControlLabel, FormControl, Button } from "react-bootstrap";
+import { Form, FormGroup, Col, ControlLabel, FormControl, Button, ButtonGroup, Radio } from "react-bootstrap";
 import ColorPanel from "../colorPanel/ColorPanel.jsx";
 import "./socketForm.css";
 
@@ -10,7 +10,8 @@ export default class SocketForm extends Component {
       this.state = {
          url: "",
          event: "",
-         data: ""
+         dataType: "",
+         data: "",
       };
    }
 
@@ -84,6 +85,7 @@ export default class SocketForm extends Component {
       this.props.onSend( {
          url: url,
          event: this.state.event,
+         dataType: this.state.dataType,
          data: this.state.data
       } );
    }
@@ -95,6 +97,12 @@ export default class SocketForm extends Component {
       }
 
       this.props.onCancel();
+   }
+
+   handleChangeDataType( event ) {
+      this.setState( {
+         dataType: arguments[0]
+      } );
    }
 
    renderMessagePanel( columns ) {
@@ -156,11 +164,22 @@ export default class SocketForm extends Component {
                </Col>
             </FormGroup>
             <FormGroup
-               controlId="formData"
+               controlId="formDataType"
                bsSize="sm"
             >
                <Col componentClass={ControlLabel} sm={2}>Data</Col>
                <Col sm={10}>
+                  <ButtonGroup>
+                     <Radio inline onChange={this.handleChangeDataType.bind( this, "javascript" )} checked={this.state.dataType === "javascript"}>JavaScript</Radio>
+                      <Radio inline onChange={this.handleChangeDataType.bind( this, "rawString" )} checked={this.state.dataType === "rawString"}>Raw string</Radio>
+                  </ButtonGroup>
+               </Col>
+            </FormGroup>
+            <FormGroup
+               controlId="formData"
+               bsSize="sm"
+            >
+               <Col smOffset={2} sm={10}>
                   <FormControl
                      componentClass="textarea"
                      value={this.state.data}

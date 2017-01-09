@@ -1,7 +1,7 @@
 {
   "name": "socketio-webclient",
   "main": "index.html",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "socketio-webclient application",
   "license": "MIT",
   "author": "Justin Welsch (j.welsch@gmail.com)",

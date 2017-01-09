@@ -30,12 +30,19 @@ export default class App extends Component {
          const waitConnect = this.socket.connect( args.url );
 
          waitConnect.then( () => {
-            const strObj = args.data;
-            const obj = strObj ? eval( "(" + strObj + ")" ) : undefined;
-            const waitRequest = this.socket.request( args.event, obj );
+            let data;
+
+            if ( args.dataType === "javascript" ) {
+               const strObj = args.data;
+               data = strObj ? eval( "(" + strObj + ")" ) : undefined;
+            }
+            else {
+               data = args.data;
+            }
+
+            const waitRequest = this.socket.request( args.event, data );
 
             waitRequest.then( response => {
-               // Successfully received response.
                this.socket.disconnect();
                console.log( "Successfully received response." );
                this.setCursor( false );
