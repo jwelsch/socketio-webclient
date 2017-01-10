@@ -10,7 +10,7 @@ export default class SocketForm extends Component {
       this.state = {
          url: "",
          event: "",
-         dataType: "",
+         dataType: "javascript",
          data: "",
       };
    }
